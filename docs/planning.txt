@@ -1,0 +1,10 @@
+2024-10-04
+- Read the challenger and plan the next actions
+
+2024-10-05
+(morning) - prepare the workspace (ide, read the challenger (again), and start drawing the solution (database, entities, etc, git).
+(afternoon) - draw the solution and start development.
+
+2024-10-06
+(morning) - continue to develop.
+(afternoon) - testing and finishing the development.
