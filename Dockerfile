@@ -1,21 +1,20 @@
 # Stage 1: Build
-FROM maven:3.8.6-openjdk-17-slim AS builder
+FROM maven:3.8.4-openjdk-17-slim AS builder
 
 # Set the working directory
 WORKDIR /app
+
 # Copy the Maven Wrapper scripts and the pom.xml
-COPY mvnw .
-COPY .mvn .mvn
 COPY pom.xml .
+COPY mvnw .
+COPY .mvn ./.mvn
+COPY src ./src.
 
-# Install dependencies using the Maven Wrapper
-RUN chmod +x mvnw && ./mvnw dependency:go-offline
+# Ensure the Maven Wrapper is executable
+RUN chmod +x mvnw
 
-# Copy the source code
-COPY src ./src
-
-# Run tests and build the application using the Maven Wrapper
-RUN ./mvnw clean package -DskipTests=false && echo "Tests and build the application ran successfully"
+# Download dependencies and build the project
+RUN ./mvnw clean package
 
 # Stage 2: Run
 FROM openjdk:17-jdk-slim
@@ -25,7 +24,7 @@ WORKDIR /app
 
 # Copy the jar file from the target directory
 ARG VERSION=0.0.1-SNAPSHOT
-COPY target/care-track-${VERSION}.jar app.jar
+COPY --from=0  /app/target/care-track-${VERSION}.jar app.jar
 
 # Expose the application port
 EXPOSE 8081
