@@ -12,6 +12,9 @@ COPY .mvn .mvn
 COPY src ./src
 COPY pom.xml ./pom.xml
 
+# Make sure the mvnw script is executable
+RUN chmod +x ./mvnw
+
 # Build the application
 RUN ./mvnw package -DskipTests=false
 
