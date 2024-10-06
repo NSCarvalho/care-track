@@ -36,10 +36,22 @@ public class AppointmentRepoService {
     }
 
     private static List<Symptom> getSymptoms(Boolean includeSymptoms, AppointmentEntity appointmentEntity) {
-        return includeSymptoms ? appointmentEntity.getAppointmentSymptoms().stream()
-                .map(appointmentSymptom ->
-                        Symptom.builder().description(appointmentSymptom.getSymptom().getDescription()).id(appointmentSymptom.getSymptom().getId()).build())
-                .toList() : Collections.emptyList();
+        return includeSymptoms ? getSymptoms(appointmentEntity) : Collections.emptyList();
+    }
+
+    private static List<Symptom> getSymptoms(AppointmentEntity savedEntity) {
+        if (savedEntity.getAppointmentSymptoms() == null) {
+            return Collections.emptyList();
+        }
+        return savedEntity.getAppointmentSymptoms().stream().map(appointmentSymptom ->
+                Symptom.builder().description(appointmentSymptom
+                        .getSymptom()
+                                .getDescription())
+                        .id(appointmentSymptom
+                                .getSymptom()
+                                .getId())
+                        .build())
+                .toList();
     }
 
     public List<Appointment> getAppointmentsByPatient(Long patientId, Boolean includeSymptoms) {
@@ -97,7 +109,7 @@ public class AppointmentRepoService {
                         .id(patient.getId())
                         .name(patient.getName())
                         .build())
-                .symptoms(appointment.getSymptoms())
+                .symptoms(getSymptoms(savedEntity))
                 .pathology(Pathology
                         .builder()
                         .id(pathology.getId())

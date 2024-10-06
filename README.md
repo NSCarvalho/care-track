@@ -26,7 +26,7 @@ To run the application using Docker, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/care-track.git
+   git clone https://github.com/NSCarvalho/care-track.git
    cd care-track
    ```
 
@@ -49,7 +49,7 @@ To run the application locally without Docker, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/care-track.git
+   git clone https://github.com/NSCarvalho/care-track.git
    cd care-track
    ```
 
