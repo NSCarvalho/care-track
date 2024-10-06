@@ -1,33 +1,22 @@
-# Stage 1: Build
-FROM maven:3.8.4-openjdk-17-slim AS builder
-
-# Set the working directory
-WORKDIR /app
-
-# Copy the Maven Wrapper scripts and the pom.xml
-COPY pom.xml .
-COPY mvnw .
-COPY .mvn ./.mvn
-COPY src ./src.
-
-# Ensure the Maven Wrapper is executable
-RUN chmod +x mvnw
-
-# Download dependencies and build the project
-RUN ./mvnw clean package
-
-# Stage 2: Run
+# Use an official OpenJDK image as a base
 FROM openjdk:17-jdk-slim
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the jar file from the target directory
-ARG VERSION=0.0.1-SNAPSHOT
-COPY --from=0  /app/target/care-track-${VERSION}.jar app.jar
+# Copy the Maven/Gradle wrapper and configuration files
+COPY mvnw* ./
+COPY .mvn .mvn
 
-# Expose the application port
+# Copy the application source code
+COPY src ./src
+COPY pom.xml ./pom.xml
+
+# Build the application
+RUN ./mvnw package -DskipTests=false
+
+# Expose the port the application runs on
 EXPOSE 8081
 
-# Run the jar file
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Define the command to run the application
+CMD ["java", "-jar", "target/care-track-0.0.1-SNAPSHOT.jar"]
