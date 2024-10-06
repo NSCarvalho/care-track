@@ -79,6 +79,50 @@ The following environment variables are configured in the `docker-compose.yaml` 
 
 A Postman collection is included in the `docs` folder to test the services. You can import the collection into Postman to start testing the API endpoints.
 
+## FAQ
+
+### 1. **Problem: `./mvnw: not found` Error during Docker Build**
+
+When building the Docker image, you might encounter the following error:
+
+```
+ERROR [caretrack 8/8] RUN ./mvnw package -DskipTests=false
+0.7s
+------
+ > [caretrack 8/8] RUN ./mvnw package -DskipTests=false:
+0.649 /bin/sh: 1: ./mvnw: not found
+```
+
+#### Cause:
+This issue usually occurs when the `mvnw` file does not have the correct line endings, especially if it was originally created on a Windows system. By default, Windows uses CRLF (`\r\n`) line endings, while Unix-based systems (like Linux, which Docker containers use) expect LF (`\n`) line endings.
+
+#### Solution:
+To resolve this issue, you need to:
+
+1. **Ensure the `mvnw` file has Unix-style (LF) line endings:**
+   - If you are working in an IDE, such as IntelliJ or VS Code, ensure that the `mvnw` file uses **LF** as the end-of-line (EOL) format.
+   - You can also use the `dos2unix` command to convert the file:
+     ```bash
+     dos2unix mvnw
+     ```
+
+#### Steps to Fix:
+
+1. Open a terminal and navigate to the directory containing the `mvnw` file.
+
+2. Run the following command:
+   ```bash
+   # Convert the file to Unix EOL format
+   dos2unix mvnw
+   ```
+
+3. Rebuild the Docker image:
+   ```bash
+   docker-compose up --build
+   ```
+
+After applying these changes, the Docker build should complete successfully without encountering the `mvnw: not found` error.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
